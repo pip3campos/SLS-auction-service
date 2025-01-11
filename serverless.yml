@@ -1,0 +1,45 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: humanb3ings
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: auction-service
+
+provider:
+  name: aws
+  runtime: nodejs22.x
+  stage: ${opt:stage, 'dev'}
+  region: sa-east-1
+  environment:
+    AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTable.name}
+  iamRoleStatements:
+    - ${file(iam/AuctionsTableIAM.yml):AuctionsTableIAM}
+
+resources:
+  Resources:
+    AuctionsTable: ${file(resources/AuctionsTable.yml):AuctionsTable}
+
+functions:
+  createAuction:
+    handler: src/handlers/createAuction.handler
+    events:
+      - httpApi:
+          path: /auction
+          method: post
+  
+  getAuctions:
+    handler: src/handlers/getAuctions.handler
+    events:
+      - httpApi:
+          path: /auctions
+          method: get
+  
+  getAuction:
+    handler: src/handlers/getAuction.handler
+    events:
+      - httpApi:
+          path: /auction/{id}
+          method: get
+
+custom:
+  AuctionsTable:
+    name: !Ref AuctionsTable
+    arn:  !GetAtt AuctionsTable.Arn
