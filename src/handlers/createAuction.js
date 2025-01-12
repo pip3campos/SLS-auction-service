@@ -7,14 +7,19 @@ import createError from 'http-errors'
 const ddbClient = new DynamoDBClient({})
 
 async function createAuction(event, context) {
-    const { title } = event.body
+    const title = event.body.title
     const now = new Date()
     
     const auction = {
         id: { S: uuid() },
         title: { S: title },
         status: { S: 'OPEN' },
-        createdAt: { S: now.toISOString() }
+        createdAt: { S: now.toISOString() },
+        highestBid: {
+            M: {
+                amount: { N: '0'}
+            }
+        }
     }
 
     const params = {

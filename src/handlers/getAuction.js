@@ -4,11 +4,8 @@ import createError from 'http-errors'
 
 const ddbClient = new DynamoDBClient({})
 
-async function getAuction(event, context) {
+export async function getAuctionById(id) {
     let auction
-    const id = event.pathParameters.id
-    console.log("Requesting auction with ID:", id);
-    
     try {
         const result = await ddbClient.send(new GetItemCommand({
             TableName: process.env.AUCTIONS_TABLE_NAME,
@@ -22,6 +19,14 @@ async function getAuction(event, context) {
     if (!auction) {
         throw new createError.NotFound(`Auction with ID "${id}" not found!`)
     }
+
+    return auction
+}
+
+async function getAuction(event, context) {
+    const id = event.pathParameters.id
+    const auction = await getAuctionById(id)
+    console.log("Requesting auction with ID:", id);
     return {
         statusCode: 200,
         body: JSON.stringify(auction)

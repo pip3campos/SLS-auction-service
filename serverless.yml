@@ -38,6 +38,13 @@ functions:
       - httpApi:
           path: /auction/{id}
           method: get
+  
+  placeBid:
+    handler: src/handlers/placeBid.handler
+    events:
+      - httpApi:
+          path: /auction/{id}/bid
+          method: patch
 
 custom:
   AuctionsTable:
