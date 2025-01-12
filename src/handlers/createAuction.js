@@ -9,12 +9,15 @@ const ddbClient = new DynamoDBClient({})
 async function createAuction(event, context) {
     const title = event.body.title
     const now = new Date()
+    const endDate = new Date()
+    endDate.setHours(now.getHours() + 1)
     
     const auction = {
         id: { S: uuid() },
         title: { S: title },
         status: { S: 'OPEN' },
         createdAt: { S: now.toISOString() },
+        endingAt: { S: endDate.toISOString()},
         highestBid: {
             M: {
                 amount: { N: '0'}
