@@ -3,7 +3,6 @@ import { DynamoDBClient, UpdateItemCommand } from '@aws-sdk/client-dynamodb'
 const ddbClient = new DynamoDBClient({})
 
 export async function closeAuction(auction) {
-    console.log(auction)
     if (!auction || !auction.id) {
         throw new Error('Auction ID is missing');
     }

@@ -20,7 +20,6 @@ export async function getEndedAuctions() {
 
     try {
         const response = await ddbClient.send(new QueryCommand(params))
-        console.log('DynamoDB Response:', response)
         return Array.isArray(response.Items) ? response.Items : []
     } catch (error) {
         console.error('Error fetching auctions:', error)

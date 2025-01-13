@@ -3,6 +3,9 @@ import { v4 as uuid } from 'uuid'
 import commonMiddleware from '../lib/commonMiddleware.js'
 import httpJsonBodyParser from '@middy/http-json-body-parser'
 import createError from 'http-errors'
+import validator from '@middy/validator'
+import { transpileSchema } from "@middy/validator/transpile"
+import createAuctionSchema from '../lib/schemas/createAuctionSchema.js'
 
 const ddbClient = new DynamoDBClient({})
 
@@ -44,3 +47,9 @@ async function createAuction(event, context) {
 
 export const handler = commonMiddleware(createAuction)
     .use(httpJsonBodyParser())
+    .use(validator({
+        eventSchema: transpileSchema(createAuctionSchema),
+        ajvOptions: {
+            strict: true
+        }
+    }))

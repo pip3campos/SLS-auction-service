@@ -5,7 +5,6 @@ import { getEndedAuctions } from '../lib/getEndedAuctions.js'
 async function processAuctions (event, context) {
     try {
         const auctionsToClose = await getEndedAuctions()
-        console.log('auctionsToClose:', auctionsToClose)
         if (!Array.isArray(auctionsToClose) || auctionsToClose.length === 0) {
             console.log('No auctions to close.');
             return { closed: 0 };
